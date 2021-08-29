@@ -1,19 +1,10 @@
 const projectsData = [
   {
-    title: 'A Search Engine',
-    description: `What if you could look up any information in the world? Webpages, images, videos
-    and more. Google has many features to help you find exactly what you're looking
-    for.`,
-    imgSrc: '/static/images/google.png',
-    href: 'https://www.google.com',
-  },
-  {
-    title: 'The Time Machine',
-    description: `Imagine being able to travel back in time or to the future. Simple turn the knob
-    to the desired date and press "Go". No more worrying about lost keys or
-    forgotten handphones with this simple yet affordable solution.`,
-    imgSrc: '/static/images/time-machine.jpg',
-    href: '/blog/the-time-machine',
+    title: 'KW6502',
+    description: `My build of Ben Eater's inspired 6502 8-bit computer similar to typical machines of the early 1980s. 
+    The software is mostly written in assemby, and some in C.`,
+    imgSrc: '/static/images/KW-6502.jpg',
+    href: '/blog/kw6502',
   },
 ]
 

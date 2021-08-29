@@ -1,0 +1,123 @@
+---
+title: Building my own 8 bit computer
+date: '2021-08-29'
+tags: ['hardware', 'software', 'assembly', 'c', 'electronics']
+draft: false
+summary: Some of the work in progress during my build of Ben Eater's inspired 6502 8-bit computer similar to typical machines of the early 1980s.
+---
+
+This post contains some of the work in progress during my build of Ben Eater's inspired 6502 8-bit computer similar 
+to typical machines of the early 1980s. If you haven't seen Ben's videos, I would strongly suggest you start there:
+[Ben Eater's 6502 project](https://eater.net/6502)
+
+The full source code for this project is available on [GitHub](https://github.com/20Koen02/KW6502)
+
+![KW-6502](/static/images/KW-6502.jpg)
+
+
+## Table of Contents
+<TOCInline toc={props.toc} exclude="Table of Contents"/>
+
+
+## Philosophy
+After watching Ben Eater's videos, I was intrigued by the idea of building a 8-bit computer.
+I have always liked building hardware projects, and this would be my biggest one yet.
+
+But most of all, I was super excited to start building software for this thing. 
+I always wanted to learn assembly and this was the perfect way to do that.
+
+
+## What is different
+After building Ben Eater's 6502 project, I was very excited to start changing and optimizing it. 
+I changed some things to the address decoding, added serial communication and changed a few other things.
+
+### Address decoding
+As Ben explained in his video, there are many ways to handle address decoding logic and he opted for model with 16K RAM, 8K VIA shadow and 32K ROM. 
+He does note that it's a bit of a waste, but given the simplicity of the project it should not be a problem - and he is absolutely right.
+
+I wanted more with my build. I wanted to test my understanding of how address decoding works. 
+My build provides 24K RAM, 4K VIA shadow, 4K ACIA shadow and 32K ROM.
+
+![Address Decoding Comparison](/static/images/address-compare.png)
+
+| Segment | BE6502        | KW6502        |
+|---------|---------------|---------------|
+| RAM     | 0x0000-0x3fff | 0x0000-0x5fff |
+| ACIA    |               | 0x6000        |
+| VIA     | 0x6000        | 0x7000        |
+| ROM     | 0x8000-0xffff | 0x8000-0xffff |
+
+As you can see, less address space is wasted which means more space is available to RAM.
+I have never managed to fill up the RAM or ROM, but it's a nice change anyways.
+To achieve this I added another Quad NAND gate (74HC00).
+
+
+### ACIA chip for serial communication
+Thanks to the ACIA chip all the input/output can be handled by the serial port. 
+This expansion allows you to output infinite amounts of data to your serial monitor, so you're no longer limited by the tiny LCD. 
+You can input all sorts of data, like keyboard input or even files using the XMODEM protocol.
+
+Installing the ACIA chip was a bit tricky, there's a lot of wires to connect. But once you have it, it's pretty easy to use.
+
+
+### Other changes
+I chose to migrate from VASM to CC65.
+As much as I liked VASM for small, simple projects, it became quite cumbersome to use when I wanted to introduce different addressing models. 
+CC65 is basically much better compiler for anything 6502. It also enabled me to use C code in my project.
+
+A small change I did was swapping the 1 MHz clock to a 1.8432 MHz clock.
+I did this because the ACIA chip needs this specific clock speed anyways, so why not use it for the whole system.
+At first I was worried the system would become unstable, but I was wrong.
+
+
+## Software
+Most software for the KW6502 is written in assembly. I got C code working, but I just haven't used it that much yet.
+The software should work on any reasonable clock speed and can be easily configured for any similar system.
+Most of the software makes use of the serial expansion, so a lot of software can't be run on the default Ben Eater 6502 project.
+
+I wrote examples for every piece of hardware I could interact with. The lcd, serial port and buttons all have an example program that shows them working.
+I split the code for interacting with the lcd and serial port into separate files, which can be used in other programs.
+
+The source code for the software is available on [GitHub](https://github.com/20Koen02/KW6502/tree/master/Software)
+
+
+### MicroChess
+I got the MicroChess game working. It's a simple chess game, but it's a good example of how powerfull the serial port is.
+Microchess for the Kim-1 was the first game program sold for home computers. After six months of development, the first copy was shipped on December 18, 1976.
+
+![MicroChess](/static/images/microchess.png)
+
+
+### Getting C code working
+It was very difficult to get C code working. I struggled for a long time because debugging the 6502 at runtime is basically imposible.
+
+I think it's pretty cool that it's possible to write both C and assembly code in the same project.
+It enabled me to use my assembly lcd routines in my C code. Only thing I had to do was export them, specify them in a header file and use them in my C code.
+
+C code is a lot easier to write, read and understand than assembly, 
+because seemingly simple things like creating conditional loops are actually pretty difficult in assembly.
+
+The only downside is speed and space. Assembly code is much more space efficient and faster to run. Small price to pay for sanity, I guess.
+
+
+### BASIC integration hell
+I was very excited to start writing in BASIC. 
+I knew it would be quite difficult to get it working, but getting BASIC to work on the 6502 was one of my end goals, so I persisted.
+
+There are a lot of BASIC variations, and you can even create your own. 
+I found a modified OSI 6502 BASIC program that included some ACIA routines to make it work with a serial monitor.
+It just wouldn't work, I had loads of trouble with it. I changed the addressing and it still didn't work.
+After a lot of changes to the ACIA routines and countless hours of debugging, I finally got it working.
+
+
+## Future plans
+I'm planning to add a few more features to the KW6502.
+
+It would be fun to add the TMS9918A video chip to the KW6502, I heard it's not that difficult, so this may be my next expansion.
+
+Some other ideas:
+* Adding an SD card reader
+* Audio beeper with multiple tones
+* Potentiometer to digital input
+* Writing a shell
+* Writing a simple math interpreter
