@@ -1,6 +1,5 @@
 ---
 name: Koen van Wijngaarden
-avatar: /static/images/avatar.jpg
 occupation: Student and Software Engineer
 email: mail@koen02.nl
 linkedin: https://www.linkedin.com/in/koen-van-wijngaarden-b56003208/

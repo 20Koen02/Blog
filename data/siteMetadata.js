@@ -7,7 +7,6 @@ const siteMetadata = {
   siteUrl: 'https://koen02.nl',
   siteRepo: 'https://github.com/20Koen02/Blog',
   siteLogo: '/static/images/logo.png',
-  image: '/static/images/avatar.jpg',
   socialBanner: '/static/images/twitter-card.png',
   email: 'mail@koen02.nl',
   github: 'https://github.com/20Koen02',
